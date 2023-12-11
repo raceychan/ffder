@@ -135,11 +135,13 @@ class TOMLFileLoader(FileLoader):
 
     def loads(self, file: pathlib.Path) -> dict[str, ty.Any]:
         try:
-            import tomllib as tomli
+            import tomllib
+        except ModuleNotFoundError:
+            import tomli as tomllib
         except ImportError as ie:
             raise UnsupportedFileFormatError(file) from ie
 
-        config = tomli.loads(file.read_text())
+        config = tomllib.loads(file.read_text())
         return config
 
 
