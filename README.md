@@ -38,7 +38,7 @@ Before you can use the ffder package, install it and its dependencies according 
 Instantiate a `FileUtil` object and use it to read files. The `read_file` method tries to read the file with the supported format loaders. Here's a basic example of reading a `.json` file:
 
 ```python
-from file_util import FileUtil
+from ffder import FileUtil
 
 # Create a FileUtil instance
 file_util = FileUtil()
@@ -61,7 +61,7 @@ You don't need to explicity register your Loader class if it is inherited from t
 If you need to support a new file format without inheriting, register the new loader like this:
 
 ```python
-from file_util import FileLoader
+from ffder import FileLoader
 
 # Register the new XML loader
 @FileLoader.register
@@ -110,8 +110,7 @@ XML files here.
 After registering the new loader, it becomes part of the chain and can be used automatically when reading files with the `.xml` extension:
 
 ```python
-config_data = file_util
-read_file('configuration.xml')
+config_data = file_util.read_file('configuration.xml')
 ```
 
 ## Advanced Usage
@@ -121,7 +120,7 @@ read_file('configuration.xml')
 By default, the `FileLoader.from_chain()` method constructs a chain of loaders in the reverse order of their declaration, so that you can override existing loader by adding a new loader for the same file format. To customize the order or to include custom loaders in the chain, manually create instances and set the `next` property.
 
 ```python
-from file_util import FileUtil, JsonFileLoader, YAMLFileLoader, ENVFileLoader, TOMLFileLoader
+from ffder import FileUtil, JsonFileLoader, YAMLFileLoader, ENVFileLoader, TOMLFileLoader
 
 # Manually create a custom chain of loaders
 json_loader = JsonFileLoader()
@@ -141,7 +140,7 @@ file_util = FileUtil(file_loader=json_loader)
 The package raises specific exceptions for error scenarios, which can be handled by the consuming application:
 
 ```python
-from file_util import FileUtil, UnsupportedFileFormatError, FileNotFoundError
+from ffder import FileUtil, UnsupportedFileFormatError, FileNotFoundError
 
 file_util = FileUtil()
 
