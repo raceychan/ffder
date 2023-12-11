@@ -1,8 +1,6 @@
 # ffder
 
-----
-
-## **Introducing ffder: a highly extensible, oneshop-for-all file loader**
+## **Introducing ffder: a highly extensible, all-in-one file loader**
 
 ----
 
