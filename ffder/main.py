@@ -19,8 +19,9 @@ class UnsupportedFileFormatError(Exception):
         )
 
 
-class LoaderNode(abc.ABC):
+class LoaderNode(ty.Protocol):
     next: ty.Optional["LoaderNode"]
+    supported_formats: ty.ClassVar[set[str] | str]
 
     @abc.abstractmethod
     def _validate(self, file: pathlib.Path) -> bool:
@@ -100,8 +101,12 @@ class FileLoader(LoaderNode):
         node.next = prev
 
     @classmethod
-    def register(cls, loader: type["LoaderNode"]) -> None:
+    def register(cls, loader: type["LoaderNode"]) -> type["LoaderNode"]:
+        """
+        Use this to register a new loader to the chain
+        """
         cls._handle_chain.append(loader)
+        return loader
 
     @classmethod
     def from_chain(cls, reverse: bool = True) -> "LoaderNode":

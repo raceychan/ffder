@@ -19,7 +19,6 @@ ffder is a Python package designed to load and parse file contents into Python d
 
 ## Requirements
 
-
 To use specific file loaders, the ffder package requires the following:
 > Install as you go, you don't have to install unused dependency.
 
@@ -57,13 +56,24 @@ config_data = file_util.read_file('settings.toml')
 ```
 
 ### Registering New File Loaders
-If you need to support a new file format, extend the `FileLoader` class and register the new loader:
+
+You don't need to explicity register your Loader class if it is inherited from the FileLoader class, as it's done automatically.
+If you need to support a new file format without inheriting, register the new loader like this:
 
 ```python
 from file_util import FileLoader
 
-class XMLFileLoader(FileLoader):
-    supported_formats = ".xml"
+# Register the new XML loader
+@FileLoader.register
+class XMLFileLoader:
+    supported_formats: set[str] | str = ".xml"
+    next: ty.Optional["LoaderNode"] = None
+
+    def _validate(self, file: pathlib.Path) -> bool:
+        return file.suffix == ".xml"
+
+    def handle(self, file: pathlib.Path) -> dict[str, ty.Any]:
+        return self.loads(file)
 
     def loads(self, file: pathlib.Path) -> dict[str, ty.Any]:
         # Implement loading logic for
@@ -95,8 +105,6 @@ XML files here.
                 data[root.tag] = text
         return data
 
-# Register the new XML loader
-FileLoader.register(XMLFileLoader)
 ```
 
 After registering the new loader, it becomes part of the chain and can be used automatically when reading files with the `.xml` extension:
