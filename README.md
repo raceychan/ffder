@@ -19,7 +19,7 @@ assert isinstance(config, dict)
 ## Features
 
 - Lazy-import, install dependency as you needed it
-- File discovery based on file names.
+- File discovery based on file names or patterns.
 - Support for loading files in .env, .toml, .yaml/.yml, and .json formats.
 - Chain of file loader classes that can be extended for additional formats.
 - Caching strategy for loaded files to improve performance.
@@ -84,9 +84,7 @@ class XMLFileLoader:
         return self.loads(file)
 
     def loads(self, file: pathlib.Path) -> dict[str, ty.Any]:
-        # Implement loading logic for
-
-XML files here.
+        # Implement loading logic for XML files here.
         import xml.etree.ElementTree as ET
 
         tree = ET.parse(file)
