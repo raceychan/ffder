@@ -110,7 +110,7 @@ read_file('configuration.xml')
 
 ### Customizing the File Loader Chain
 
-By default, the `FileLoader.from_chain()` method constructs a chain of loaders in the reverse order of their declaration. To customize the order or to include custom loaders in the chain, manually create instances and set the `next` property.
+By default, the `FileLoader.from_chain()` method constructs a chain of loaders in the reverse order of their declaration, so that you can override existing loader by adding a new loader for the same file format. To customize the order or to include custom loaders in the chain, manually create instances and set the `next` property.
 
 ```python
 from file_util import FileUtil, JsonFileLoader, YAMLFileLoader, ENVFileLoader, TOMLFileLoader
@@ -122,16 +122,12 @@ env_loader = ENVFileLoader()
 toml_loader = TOMLFileLoader()
 
 # Set the order of loaders manually
-json_loader.next = yaml_loader
-yaml_loader.next = env_loader
-env_loader.next = toml_loader
-
+json_loader.chain(yaml_loader).chain(env_loader).chain(toml_loader)
 # Use the custom chain in FileUtil
 file_util = FileUtil(file_loader=json_loader)
 
 # Now the custom chain is used to load files
 ```
-
 ### Error Handling
 
 The package raises specific exceptions for error scenarios, which can be handled by the consuming application:

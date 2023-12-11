@@ -20,6 +20,8 @@ class UnsupportedFileFormatError(Exception):
 
 
 class LoaderNode(abc.ABC):
+    next: ty.Optional["LoaderNode"]
+
     @abc.abstractmethod
     def _validate(self, file: pathlib.Path) -> bool:
         raise NotImplementedError
@@ -28,9 +30,13 @@ class LoaderNode(abc.ABC):
     def loads(self, file: pathlib.Path) -> dict[str, ty.Any]:
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def handle(self, file: pathlib.Path) -> dict[str, ty.Any]:
+        raise NotImplementedError
+
 
 class FileLoader(LoaderNode):
-    _handle_chain: ty.ClassVar[list[type["FileLoader"]]] = list()
+    _handle_chain: ty.ClassVar[list[type["LoaderNode"]]] = list()
     supported_formats: ty.ClassVar[set[str] | str]
 
     def __init__(self) -> None:
@@ -52,6 +58,10 @@ class FileLoader(LoaderNode):
     @next.setter
     def next(self, handler: ty.Optional["FileLoader"]) -> None:
         self._next = handler
+
+    def chain(self, handler: "FileLoader") -> "FileLoader":
+        self.next = handler
+        return self.next
 
     def validate(self, file: pathlib.Path) -> bool:
         if not file.is_file() or not file.exists():
@@ -90,11 +100,11 @@ class FileLoader(LoaderNode):
         node.next = prev
 
     @classmethod
-    def register(cls, loader: type["FileLoader"]) -> None:
+    def register(cls, loader: type["LoaderNode"]) -> None:
         cls._handle_chain.append(loader)
 
     @classmethod
-    def from_chain(cls, reverse: bool = True) -> "FileLoader":
+    def from_chain(cls, reverse: bool = True) -> "LoaderNode":
         loaders = [loader_cls() for loader_cls in cls._handle_chain]
 
         if reverse:
@@ -163,7 +173,7 @@ class FileUtil:
     def __init__(
         self,
         work_dir: pathlib.Path = pathlib.Path.cwd(),
-        file_loader: FileLoader = FileLoader.from_chain(),
+        file_loader: LoaderNode = FileLoader.from_chain(),
     ):
         self.work_dir = work_dir
         self.file_loader = file_loader
