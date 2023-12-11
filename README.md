@@ -6,9 +6,18 @@
 
 ffder is a Python package designed to load and parse file contents into Python dictionaries. It supports various file formats, as it dynamically selects the appropriate loader for a given file format.
 
+## Super Simple API
+
+Reading a config file can be as easy as:
+
+```python
+from ffder import FileUtil
+config = FileUtil().read_file(".env")
+```
+
 ## Features
 
-- lazy-import, install dependency as you needed it
+- Lazy-import, install dependency as you needed it
 - File discovery based on file names.
 - Support for loading files in .env, .toml, .yaml/.yml, and .json formats.
 - Chain of file loader classes that can be extended for additional formats.
@@ -133,6 +142,7 @@ file_util = FileUtil(file_loader=json_loader)
 
 # Now the custom chain is used to load files
 ```
+
 ### Error Handling
 
 The package raises specific exceptions for error scenarios, which can be handled by the consuming application:
