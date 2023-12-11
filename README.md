@@ -6,13 +6,14 @@
 
 ffder is a Python package designed to load and parse file contents into Python dictionaries. It supports various file formats, as it dynamically selects the appropriate loader for a given file format.
 
-## Super Simple API
+## Load your config file in a blink
 
 Reading a config file can be as easy as:
 
 ```python
 from ffder import FileUtil
 config = FileUtil().read_file(".env")
+assert isinstance(config, dict)
 ```
 
 ## Features
