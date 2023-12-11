@@ -1,18 +1,27 @@
 # ffder
 
-ffder is a Python package designed to load and parse file contents into Python dictionaries. It supports various file formats by implementing a chain of responsibility design pattern that dynamically selects the appropriate loader for a given file format.
+----
+
+## **Introducing ffder: a highly extensible, oneshop-for-all file loader**
+
+----
+
+ffder is a Python package designed to load and parse file contents into Python dictionaries. It supports various file formats, as it dynamically selects the appropriate loader for a given file format.
 
 ## Features
 
+- lazy-import, install dependency as you needed it
 - File discovery based on file names.
 - Support for loading files in .env, .toml, .yaml/.yml, and .json formats.
 - Chain of file loader classes that can be extended for additional formats.
 - Caching strategy for loaded files to improve performance.
-- Exception handling for unsupported file formats and file not found errors.
+- Human-friendly error messages, exception handling for unsupported file formats.
 
 ## Requirements
 
+
 To use specific file loaders, the ffder package requires the following:
+> Install as you go, you don't have to install unused dependency.
 
 - `python-dotenv` for `.env` files.
 - `tomllib` (built-in for Python 3.11 and higher) or `toml` for older Python versions for `.toml` files.
@@ -26,6 +35,7 @@ Make sure to install the necessary dependencies for the file types you plan to w
 Before you can use the ffder package, install it and its dependencies according to your file format needs.
 
 ### Basic File Loading
+
 Instantiate a `FileUtil` object and use it to read files. The `read_file` method tries to read the file with the supported format loaders. Here's a basic example of reading a `.json` file:
 
 ```python
@@ -39,6 +49,7 @@ config_data = file_util.read_file('config.json')
 ```
 
 ### Handling Different File Formats
+
 The package contains different loaders for `.env`, `.toml`, `.yaml`/`.yml`, and `.json` files. Based on the file extension, the appropriate loader is selected. For instance, reading a `.toml` file is done as follows:
 
 ```python
@@ -184,6 +195,6 @@ The ffder package is released under the [MIT License](https://opensource.org/lic
 
 If you have any questions, comments, or need further assistance regarding the ffder package, feel free to reach out to the maintainer(s) through the repository's issues section or the provided contact information.
 
----
+----
 
 Thank you for using or considering the ffder package for your file handling needs in Python.
