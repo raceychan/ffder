@@ -1,19 +1,22 @@
 # ffder
 
-## **Introducing ffder: a highly extensible, all-in-one file loader**
+## **Introducing ffder: a highly extensible, all-in-one file deserializer**
 
 ----
 
-ffder is a Python package designed to load and parse file contents into Python dictionaries. It supports various file formats, as it dynamically selects the appropriate loader for a given file format.
+ffder is a Python package designed to parse and deserialize file contents into Python dictionaries. It supports various file formats, as it dynamically selects the appropriate loader for a given file format.
 
 ## Load your config file in a blink
 
 Reading a config file can be as easy as:
 
 ```python
-from ffder import FileUtil
-config = FileUtil().read_file(".env")
-assert isinstance(config, dict)
+import ffder
+
+config = ffder.loads(".env")
+
+>>> assert isinstance(config, dict)
+True
 ```
 
 ## Features
@@ -52,7 +55,7 @@ from ffder import FileUtil
 file_util = FileUtil()
 
 # Read the contents of 'config.json' and return them as a dictionary
-config_data = file_util.read_file('config.json')
+config_data = file_util.loads('config.json')
 ```
 
 ### Handling Different File Formats
@@ -60,7 +63,7 @@ config_data = file_util.read_file('config.json')
 The package contains different loaders for `.env`, `.toml`, `.yaml`/`.yml`, and `.json` files. Based on the file extension, the appropriate loader is selected. For instance, reading a `.toml` file is done as follows:
 
 ```python
-config_data = file_util.read_file('settings.toml')
+config_data = file_util.loads('settings.toml')
 ```
 
 ### Registering New File Loaders
@@ -116,7 +119,7 @@ class XMLFileLoader:
 After registering the new loader, it becomes part of the chain and can be used automatically when reading files with the `.xml` extension:
 
 ```python
-config_data = file_util.read_file('configuration.xml')
+config_data = file_util.loads('configuration.xml')
 ```
 
 ## Advanced Usage
@@ -152,7 +155,7 @@ from ffder import FileUtil, UnsupportedFileFormatError, FileNotFoundError
 file_util = FileUtil()
 
 try:
-    data = file_util.read_file('unknown_file.cfg')
+    data = file_util.loads('unknown_file.cfg')
 
 except FileNotFoundError as e:
     print(f"Could not find the file: {e}")
@@ -173,7 +176,7 @@ The `FileUtil` class uses caching for the `from_cwd()` class method allowing the
 file_util = FileUtil.from_cwd()
 
 # Use this instance to read files as before
-config_data = file_util.read_file('config.json')
+config_data = file_util.loads('config.json')
 ```
 
 ## Conclusion

@@ -197,7 +197,15 @@ class FileUtil:
             ) from se
         return file
 
-    def read_file(self, file: str | pathlib.Path) -> dict[str, ty.Any]:
+    def loads(self, file: str | pathlib.Path) -> dict[str, ty.Any]:
+        """
+        Example:
+        ---
+
+        >>> config = FileUtil().read_file(".env")
+        >>> assert isinstance(config, dict)
+        True
+        """
         if isinstance(file, str):
             file = self.find(file)
         try:
@@ -210,3 +218,11 @@ class FileUtil:
     @functools.lru_cache(maxsize=1)
     def from_cwd(cls) -> "FileUtil":
         return cls(work_dir=pathlib.Path.cwd(), file_loader=FileLoader.from_chain())
+
+
+def loads(file: str | pathlib.Path) -> dict[str, ty.Any]:
+    return FileUtil.from_cwd().loads(file)
+
+
+def find(filename: str, dir: str | None = None) -> pathlib.Path:
+    return FileUtil.from_cwd().find(filename, dir)

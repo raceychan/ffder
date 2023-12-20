@@ -20,7 +20,7 @@ def fileutil(fileloader: FileLoader):
 def test_load_env(fileutil: FileUtil, tmp_path: pathlib.Path):
     env_file = tmp_path / ".env"
     env_file.write_text("TEST=true")
-    values = fileutil.read_file(env_file)
+    values = fileutil.loads(env_file)
     assert values["TEST"] == "true"
     assert isinstance(values, dict)
 
@@ -44,4 +44,4 @@ def test_unsupported_file_format(fileutil: FileUtil, tmp_path: pathlib.Path):
     unsupported_file.write_text("TEST=true")
     file = pathlib.Path(unsupported_file)
     with pytest.raises(UnsupportedFileFormatError):
-        _ = fileutil.read_file(file)
+        _ = fileutil.loads(file)
