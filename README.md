@@ -13,9 +13,10 @@ Reading a config file can be as easy as:
 ```python
 import ffder
 
-config = ffder.loads(".env")
+env_config = ffder.loads(".env")
 
->>> assert isinstance(config, dict)
+
+>>> assert isinstance(config, dict) 
 True
 ```
 
@@ -46,7 +47,7 @@ Before you can use the ffder package, install it and its dependencies according 
 
 ### Basic File Loading
 
-Instantiate a `FileUtil` object and use it to read files. The `read_file` method tries to read the file with the supported format loaders. Here's a basic example of reading a `.json` file:
+Instantiate a `FileUtil` object and use it to load files. The `loads` method tries to read the file with the supported format loaders. Here's a basic example of reading a `.json` file:
 
 ```python
 from ffder import FileUtil
@@ -68,16 +69,18 @@ config_data = file_util.loads('settings.toml')
 
 ### Registering New File Loaders
 
-You don't need to explicity register your Loader class if it is inherited from the FileLoader class, as it's done automatically.
-If you need to support a new file format without inheriting, register the new loader like this:
+You **DO NOT** need to explicity register your Loader class if it is inherited from the FileLoader class, as it's done automatically.
+If you would like to support a new file format without inheriting, register the new loader like this:
+(you need to implement `_validate`, `handle` and `loads` method)
 
 ```python
+import typing as ty
 from ffder import FileLoader
 
 # Register the new XML loader
 @FileLoader.register
 class XMLFileLoader:
-    supported_formats: set[str] | str = ".xml"
+    supported_formats: ty.ClassVar[set[str] | str] = ".xml"
     next: ty.Optional["LoaderNode"] = None
 
     def _validate(self, file: pathlib.Path) -> bool:
