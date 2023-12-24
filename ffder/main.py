@@ -2,6 +2,32 @@ import abc
 import functools
 import pathlib
 import typing as ty
+from collections.abc import MutableMapping
+
+
+def flatten(d: MutableMapping, parent_key: str = "", separator: str = "__"):
+    items = []
+    for key, value in d.items():
+        new_key = parent_key.upper() + separator + key if parent_key else key
+        if isinstance(value, MutableMapping):
+            if not value:
+                items.append((new_key, {}))
+            else:
+                items.extend(flatten(value, new_key, separator=separator).items())
+        else:
+            items.append((new_key, value))
+    return dict(items)
+
+
+def unflatten(flat_dict: MutableMapping, separator: str = "__"):
+    unflattened_dict = {}
+    for compound_key, value in flat_dict.items():
+        keys = compound_key.split(separator)
+        d = unflattened_dict
+        for key in keys[:-1]:
+            d = d.setdefault(key.lower() if key.isupper() else key, {})
+        d[keys[-1]] = value
+    return unflattened_dict
 
 
 class EndOfChainError(Exception):
